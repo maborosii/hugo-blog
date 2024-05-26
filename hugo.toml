@@ -1,3 +1,10 @@
-baseURL = "http://blog.maborosi.xyz/"
+baseURL = "https://blog.maborosi.xyz/"
 languageCode = "zh-cn"
 title = "Maborosi's Blog"
+theme = "PaperMod"
+
+[params]
+  author = "moborosi"
+  description = "personal blog"
+  ShowReadingTime = true
+  ShowShareButtons = true
