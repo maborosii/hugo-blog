@@ -1,0 +1,5 @@
+baseURL = "http://blog.maborosi.xyz/"
+languageCode = "zh-cn"
+title = "Maborosi's Blog"
+theme = "hyde"
+
