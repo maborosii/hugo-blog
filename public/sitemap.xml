@@ -2,23 +2,14 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://blog.maborosi.xyz/</loc>
+    <loc>http://blog.maborosi.xyz/</loc>
     <lastmod>2024-05-26T13:26:54+08:00</lastmod>
   </url><url>
-    <loc>https://blog.maborosi.xyz/post/</loc>
+    <loc>http://blog.maborosi.xyz/post/</loc>
     <lastmod>2024-05-26T13:26:54+08:00</lastmod>
   </url><url>
-    <loc>https://blog.maborosi.xyz/post/second/</loc>
-    <lastmod>2024-05-26T13:26:54+08:00</lastmod>
+    <loc>http://blog.maborosi.xyz/categories/</loc>
   </url><url>
-    <loc>https://blog.maborosi.xyz/post/first/</loc>
-    <lastmod>2024-05-26T13:18:27+08:00</lastmod>
-  </url><url>
-    <loc>https://blog.maborosi.xyz/about/</loc>
-    <lastmod>2024-05-26T13:17:29+08:00</lastmod>
-  </url><url>
-    <loc>https://blog.maborosi.xyz/categories/</loc>
-  </url><url>
-    <loc>https://blog.maborosi.xyz/tags/</loc>
+    <loc>http://blog.maborosi.xyz/tags/</loc>
   </url>
 </urlset>
