@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Maborosi&#39;s Blog</title>
     <link>https://blog.maborosi.xyz/</link>
     <description>Recent content on Maborosi&#39;s Blog</description>
-    <generator>Hugo -- 0.126.1</generator>
+    <generator>Hugo</generator>
     <language>zh-cn</language>
     <lastBuildDate>Sun, 26 May 2024 13:26:54 +0800</lastBuildDate>
     <atom:link href="https://blog.maborosi.xyz/index.xml" rel="self" type="application/rss+xml" />
@@ -21,13 +21,6 @@
       <pubDate>Sun, 26 May 2024 13:18:27 +0800</pubDate>
       <guid>https://blog.maborosi.xyz/post/first/</guid>
       <description>Hello Hugo aaa bbb ccc </description>
-    </item>
-    <item>
-      <title>About</title>
-      <link>https://blog.maborosi.xyz/about/</link>
-      <pubDate>Sun, 26 May 2024 13:17:29 +0800</pubDate>
-      <guid>https://blog.maborosi.xyz/about/</guid>
-      <description></description>
     </item>
   </channel>
 </rss>

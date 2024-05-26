@@ -1,10 +1,11 @@
 baseURL = "https://blog.maborosi.xyz/"
 languageCode = "zh-cn"
 title = "Maborosi's Blog"
-theme = "PaperMod"
+theme = "hyde"
+# theme = "PaperMod"
 
-[params]
-  author = "moborosi"
-  description = "personal blog"
-  ShowReadingTime = true
-  ShowShareButtons = true
+# [params]
+#   author = "moborosi"
+#   description = "personal blog"
+#   ShowReadingTime = true
+#   ShowShareButtons = true
