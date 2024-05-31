@@ -5,22 +5,15 @@
     <link>https://blog.maborosi.xyz/</link>
     <description>Recent content on Maborosi&#39;s Blog</description>
     <generator>Hugo</generator>
-    <language>zh-cn</language>
-    <lastBuildDate>Sun, 26 May 2024 13:26:54 +0800</lastBuildDate>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 26 Dec 2023 13:18:27 +0800</lastBuildDate>
     <atom:link href="https://blog.maborosi.xyz/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Second</title>
-      <link>https://blog.maborosi.xyz/post/second/</link>
-      <pubDate>Sun, 26 May 2024 13:26:54 +0800</pubDate>
-      <guid>https://blog.maborosi.xyz/post/second/</guid>
-      <description> 1 1 1 1 1 1 </description>
-    </item>
-    <item>
-      <title>First</title>
-      <link>https://blog.maborosi.xyz/post/first/</link>
-      <pubDate>Sun, 26 May 2024 13:18:27 +0800</pubDate>
-      <guid>https://blog.maborosi.xyz/post/first/</guid>
-      <description>Hello Hugo aaa bbb ccc </description>
+      <title>关于三种控制器授权策略配置梳理（kubernetes ingress controller）</title>
+      <link>https://blog.maborosi.xyz/post/01-ingress-diff/</link>
+      <pubDate>Tue, 26 Dec 2023 13:18:27 +0800</pubDate>
+      <guid>https://blog.maborosi.xyz/post/01-ingress-diff/</guid>
+      <description>背景 因各种 ingress controller 支持的场景各有不同，导致目前在业务项目中使用了两种入口控制器，分别是 k8s 官方维护的 ingress nginx controller (注意：nginx ingress controller 是 nginx 维护的，并非 k8s</description>
     </item>
   </channel>
 </rss>

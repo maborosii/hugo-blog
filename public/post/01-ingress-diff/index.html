@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <meta property="og:site_name" content="Maborosi&#39;s Blog">
+    <meta property="og:type" content="article">
+
+    
+    <meta property="og:image" content="https://blog.maborosi.xyz//img/maborosi-2.png">
+    <meta property="twitter:image" content="https://blog.maborosi.xyz//img/maborosi-2.png" />
+    
+
+    
+    <meta name="title" content="关于三种控制器授权策略配置梳理（kubernetes ingress controller）" />
+    <meta property="og:title" content="关于三种控制器授权策略配置梳理（kubernetes ingress controller）" />
+    <meta property="twitter:title" content="关于三种控制器授权策略配置梳理（kubernetes ingress controller）" />
+    
+
+    
+    <meta name="description" content="Movies Wander">
+    <meta property="og:description" content="Movies Wander" />
+    <meta property="twitter:description" content="Movies Wander" />
+    
+
+    
+    <meta property="twitter:card" content="summary" />
+    
+    
+
+    <meta name="keyword"  content="personal movie linux">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>关于三种控制器授权策略配置梳理（kubernetes ingress controller） | 幻の光 | Maborosi&#39;s Blog</title>
+
+    <link rel="canonical" href="/post/01-ingress-diff/">
+
+    
+    
+    
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    
+    <link rel="stylesheet" href="/css/hugo-theme-cleanwhite.min.css">
+
+    
+    <link rel="stylesheet" href="/css/zanshang.css">
+
+    
+    <link rel="stylesheet" href="/css/font-awesome.all.min.css">
+
+    
+    
+
+    
+    <script src="/js/jquery.min.js"></script>
+
+    
+    <script src="/js/bootstrap.min.js"></script>
+
+    
+    <script src="/js/hux-blog.min.js"></script>
+
+    
+    <script src="/js/lazysizes.min.js"></script>
+
+    
+    
+
+</head>
+
+
+
+
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+
+    <div class="container-fluid">
+        
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Maborosi&#39;s Blog</a>
+        </div>
+
+        
+        
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">All Posts</a>
+                    </li>
+                    
+                        
+                    
+                    
+		    
+		            <li>
+                        <a href="/search"><i class="fa fa-search"></i></a>
+		           </li>
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+    
+</nav>
+<script>
+    
+    
+    
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        
+            $navbar.className = " ";
+            
+            setTimeout(function(){
+                
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+
+
+<style type="text/css">
+    header.intro-header {
+        background-image: url('/img/maborosi-2.png')
+    }
+</style>
+
+<header class="intro-header" >
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                    </div>
+                    <h1>关于三种控制器授权策略配置梳理（kubernetes ingress controller）</h1>
+                    <h2 class="subheading"></h2>
+                    <span class="meta">
+                        
+                            Posted by 
+                            
+                                    Maborosi&#39;s Blog
+                             
+                            on 
+                            Tuesday, December 26, 2023
+                            
+                            
+                            
+                            
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+
+<article>
+    <div class="container">
+        <div class="row">
+
+            
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                
+                <h1 id="背景">背景</h1>
+<p>因各种 ingress controller 支持的场景各有不同，导致目前在业务项目中使用了两种入口控制器，分别是 k8s 官方维护的 ingress nginx controller (注意：nginx ingress controller 是 nginx 维护的，并非 k8s 官方维护，一般说的都是指 k8s 维护的入口控制器)，该控制器承担业务侧 http/https 流量，后因该入口控制器不支持在入口处进行四层代理中的 tls 终结，导致最终采用 traefik 作为第二款入口控制器，其承担业务侧 tls 加密的 tcp 流量。</p>
+<p>随着业务的发展，金丝雀发布逐渐进入了视野。在 k8s 中使用金丝雀发布必然绕不开服务网格，目前选用的 istio 作为网格组件。当然若只是因为需要金丝雀发布才引入 istio，着实有些大材小用，但因这样的契机引入服务网格，从而反向推动业务侧精细化流量管理也不失为一种所得。在灰度方案测试中，仅使用 istio 的网格功能，对于进出集群的南北流量没有使用 istio 原生的 ingress gateway 以及 egress gateway，仍然由原本的入口控制器承担原来的两种流量。</p>
+<p>而我对于运维侧流量与业务侧流量混用业务侧统一入口控制器一直抱有芥蒂，始终觉得非业务流量应与业务侧流量拆开。正是基于这样的背景下，遂试采用第三款入口控制器 istio ingress gateway 来承担运维侧流量，目的有二，一是拆分流量，二是为日后的完全网格化铺路，最终的入口控制器必然会被纳入到 istio 生态之中。</p>
+<p>以上介绍的是目前使用的三款入口控制器分别承担的角色，在使用过程中，有些业务系统并不允许对公网开放，仅放行固定的几个公网 IP。目前所有的入口控制器均绑定有公有云厂商的负载均衡器，那么将负载均衡器加入一个既定的安全组，通过安全组策略来进行授权管理即可，但现实情况是在 Azure 中存量的负载均衡器已经绑定有固定的安全组，且该安全组在每次入口控制器进行变更时会将开放的端口重置为默认公网访问；而在 AWS 中，由入口控制器自动创建的存量负载均衡器则不允许绑定安全组。那么将授权措施前置到负载均衡器就显得<strong>十分有限</strong>，只能另辟蹊径在流量通过负载均衡器达到入口控制器的时候进行授权管理，而不同的入口控制器在授权管理方面配置大不相同，这也是本次文章讨论的主题。</p>
+<h1 id="部署要求">部署要求</h1>
+<p>在 K8S 中，由于存在多层网络间的路由和 nat，若需要在入口控制器层根据源 IP 来进行授权管理，则需要确保能在入口控制器里拿到客户端 IP 信息，有如下几点要求：</p>
+<ol>
+<li>入口控制器中的 LoadBalancer 类型的 Service 中的<code>ExternalTrafficPolicy</code> 参数必须为<code>Local</code>，其默认值为<code>Cluster</code>，参数背后的原因具体参见 <a href="https://cloud.tencent.com/developer/article/2242345">负载均衡器原理</a>。</li>
+<li>istio ingress gateway 中需要确定云厂商托管 K8S 集群默认支持的负载均衡器类型，具体参见 <a href="https://istio.io/latest/zh/docs/tasks/security/authorization/authz-ingress/">isto ingress 网关</a>以及 <a href="https://istio.io/latest/zh/docs/ops/configuration/traffic-management/network-topologies/">istio 配置 Gateway 网络拓扑</a>这两篇文章（注：目前 AWS EKS 可通过注解的方式<code>service.beta.kubernetes.io/aws-load-balancer-type: nlb</code>指定默认的负载均衡器类型，一般使用 nlb 即网络负载均衡器）。</li>
+</ol>
+<h1 id="详细配置">详细配置</h1>
+<blockquote>
+<p>三种控制器配置明细均适用于 AWS 与 Azure，严格来说这种配置本身只与控制组件有关，平台中立。</p>
+</blockquote>
+<h2 id="ingress-nginx-controller">ingress nginx controller</h2>
+<p>K8S 官方的入口控制器使用白名单注解来实现源 IP 授权管理，在 ingress 规则使用注解 <code>nginx.ingress.kubernetes.io/whitelist-source-range: &quot;8.8.8.8&quot;</code> 即可完成白名单配置</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#ff79c6">apiVersion</span>: networking.k8s.io/v1
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">kind</span>: Ingress
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">name</span>: ingress
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">namespace</span>: default
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">annotations</span>: 
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">kubernetes.io/ingress.class</span>: <span style="color:#f1fa8c">&#34;nginx&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">nginx.ingress.kubernetes.io/whitelist-source-range</span>: <span style="color:#f1fa8c">&#34;8.8.8.8&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">spec</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">rules</span>:
+</span></span><span style="display:flex;"><span>  - <span style="color:#ff79c6">host</span>: xxxx.xxxx.com
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">http</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">paths</span>:
+</span></span><span style="display:flex;"><span>        - <span style="color:#ff79c6">path</span>: /app/
+</span></span><span style="display:flex;"><span>          <span style="color:#ff79c6">pathType</span>: Prefix
+</span></span><span style="display:flex;"><span>          <span style="color:#ff79c6">backend</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">service</span>:
+</span></span><span style="display:flex;"><span>              <span style="color:#ff79c6">name</span>: service-a 
+</span></span><span style="display:flex;"><span>              <span style="color:#ff79c6">port</span>:
+</span></span><span style="display:flex;"><span>                <span style="color:#ff79c6">number</span>: <span style="color:#bd93f9">80</span>
+</span></span></code></pre></div><h2 id="traefik">traefik</h2>
+<p>当 traefik 作为入口控制器时，推荐使用它自定义的 CR 来完成流量入口规则控制。在其<code>2.10</code>版本中其 CRD 所属的 API 资源组有两种，分别为<code>traefik.containo.us/v1alpha1</code>以及<code>traefik.io/v1alpha1</code>，若查询使用的资源 kind 为短写（不是简写，是指不带 API 前缀的完全名称），则默认指向前者资源组，但目前在其<code>3.0 alpha</code>版本中前者资源组已经被废弃，已完全迁移至后者中，其 CRD 对照表如下：</p>
+<table>
+<thead>
+<tr>
+<th>cr name</th>
+<th>apiversion</th>
+<th>namespaced</th>
+<th>kind</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ingressroutes</td>
+<td>traefik.containo.us/v1alpha1</td>
+<td>true</td>
+<td>IngressRoute</td>
+<td></td>
+</tr>
+<tr>
+<td>ingressroutetcps</td>
+<td>traefik.containo.us/v1alpha1</td>
+<td>true</td>
+<td>IngressRouteTCP</td>
+<td></td>
+</tr>
+<tr>
+<td>ingressrouteudps</td>
+<td>traefik.containo.us/v1alpha1</td>
+<td>true</td>
+<td>IngressRouteUDP</td>
+<td></td>
+</tr>
+<tr>
+<td>middlewares</td>
+<td>traefik.containo.us/v1alpha1</td>
+<td>true</td>
+<td>Middleware</td>
+<td></td>
+</tr>
+<tr>
+<td>middlewaretcps</td>
+<td>traefik.containo.us/v1alpha1</td>
+<td>true</td>
+<td>MiddlewareTCP</td>
+<td></td>
+</tr>
+<tr>
+<td>serverstransports</td>
+<td>traefik.containo.us/v1alpha1</td>
+<td>true</td>
+<td>ServersTransport</td>
+<td></td>
+</tr>
+<tr>
+<td>tlsoptions</td>
+<td>traefik.containo.us/v1alpha1</td>
+<td>true</td>
+<td>TLSOption</td>
+<td></td>
+</tr>
+<tr>
+<td>tlsstores</td>
+<td>traefik.containo.us/v1alpha1</td>
+<td>true</td>
+<td>TLSStore</td>
+<td></td>
+</tr>
+<tr>
+<td>traefikservices</td>
+<td>traefik.containo.us/v1alpha1</td>
+<td>true</td>
+<td>TraefikService</td>
+<td></td>
+</tr>
+<tr>
+<td>ingressroutes</td>
+<td>traefik.io/v1alpha1</td>
+<td>true</td>
+<td>IngressRoute</td>
+<td></td>
+</tr>
+<tr>
+<td>ingressroutetcps</td>
+<td>traefik.io/v1alpha1</td>
+<td>true</td>
+<td>IngressRouteTCP</td>
+<td></td>
+</tr>
+<tr>
+<td>ingressrouteudps</td>
+<td>traefik.io/v1alpha1</td>
+<td>true</td>
+<td>IngressRouteUDP</td>
+<td></td>
+</tr>
+<tr>
+<td>middlewares</td>
+<td>traefik.io/v1alpha1</td>
+<td>true</td>
+<td>Middleware</td>
+<td></td>
+</tr>
+<tr>
+<td>middlewaretcps</td>
+<td>traefik.io/v1alpha1</td>
+<td>true</td>
+<td>MiddlewareTCP</td>
+<td></td>
+</tr>
+<tr>
+<td>serverstransports</td>
+<td>traefik.io/v1alpha1</td>
+<td>true</td>
+<td>ServersTransport</td>
+<td></td>
+</tr>
+<tr>
+<td>serverstransporttcps</td>
+<td>traefik.io/v1alpha1</td>
+<td>true</td>
+<td>ServersTransportTCP</td>
+<td></td>
+</tr>
+<tr>
+<td>tlsoptions</td>
+<td>traefik.io/v1alpha1</td>
+<td>true</td>
+<td>TLSOption</td>
+<td></td>
+</tr>
+<tr>
+<td>tlsstores</td>
+<td>traefik.io/v1alpha1</td>
+<td>true</td>
+<td>TLSStore</td>
+<td></td>
+</tr>
+<tr>
+<td>traefikservices</td>
+<td>traefik.io/v1alpha1</td>
+<td>true</td>
+<td>TraefikService</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>仅给出 tcp 服务的配置明细，http 服务基本相同；traefik 中使用 middlewaretcp（tcp 服务）以及 middleware（http 服务）来添加源 IP 授权管理，最后并将 ingressroutetcp 与该 middlewaretcp 进行关联，其中：</p>
+<p>tcp 服务：<code>ingressroutetcp --&gt; middlewaretcp</code></p>
+<p>http 服务：<code>ingressroute --&gt; middleware</code></p>
+<p>配置逻辑基本相同，仅需要更换资源类型即可</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span>---
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">apiVersion</span>: traefik.io/v1alpha1
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">kind</span>: MiddlewareTCP
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">name</span>: source-ip
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">namespace</span>: default
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">spec</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">ipWhiteList</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">sourceRange</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#bd93f9">8.8.8.8</span>/32
+</span></span><span style="display:flex;"><span>---
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">apiVersion</span>: traefik.io/v1alpha1
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">kind</span>: IngressRouteTCP
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">name</span>: test-tcp
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">namespace</span>: default
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">spec</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">entryPoints</span>:
+</span></span><span style="display:flex;"><span>  - tcp-entry
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">routes</span>:
+</span></span><span style="display:flex;"><span>  - <span style="color:#ff79c6">match</span>: HostSNI(`*`)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">middlewares</span>:
+</span></span><span style="display:flex;"><span>    - <span style="color:#ff79c6">name</span>: source-ip 
+</span></span><span style="display:flex;"><span>   <span style="color:#6272a4"># 这个参数不是指 k8s 中的命名空间，是指 traefik 中的</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">namespace</span>: test
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">services</span>:
+</span></span><span style="display:flex;"><span>    - <span style="color:#ff79c6">name</span>: service-a
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">port</span>: <span style="color:#bd93f9">80</span>
+</span></span></code></pre></div><p>配置中需要注意在 ingressroutetcp 在关联 middlewaretcp 中有个配置项为<code>namespace</code>，它是指 traefik 自身的命名空间，官方说明如下：</p>
+<blockquote>
+<p>As Kubernetes also has its own notion of namespace, one should not confuse the kubernetes namespace of a resource (in the reference to the middleware) with the <a href="https://doc.traefik.io/traefik/providers/overview/#provider-namespace">provider namespace</a>, when the definition of the TCP middleware comes from another provider. In this context, specifying a namespace when referring to the resource does not make any sense, and will be ignored. Additionally, when you want to reference a MiddlewareTCP from the CRD Provider, you have to append the namespace of the resource in the resource-name as Traefik appends the namespace internally automatically.</p>
+</blockquote>
+<p>所以建议把这两者放在同一个 k8s 命名空间内部署。</p>
+<h2 id="istio-ingress-gateway">istio ingress gateway</h2>
+<p>istio 所使用的规则最为特殊，前两者主要还是在 ingress api 上做文章，istio 自有一套入口控制资源体系，分别是<code>Gateway</code>和<code>VirtualService</code>，当然该控制器同样支持原生的 ingress 规则模式进行配置，但是其相比 ingress nginx controller 来说没有丰富的注解来进行更为精准的授权流控，故这里采用 istio 原生的资源方式进行授权管理。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span>---
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">apiVersion</span>: networking.istio.io/v1alpha3
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">kind</span>: Gateway
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">name</span>: test-gateway
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">namespace</span>: default
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">spec</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">selector</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">istio</span>: ingressgateway <span style="color:#6272a4"># use Istio default gateway implementation</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">servers</span>:
+</span></span><span style="display:flex;"><span>  - <span style="color:#ff79c6">port</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">number</span>: <span style="color:#bd93f9">80</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">name</span>: http
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">protocol</span>: HTTP
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">hosts</span>:
+</span></span><span style="display:flex;"><span>    - <span style="color:#f1fa8c">&#34;xxxx.xxxx.com&#34;</span>
+</span></span><span style="display:flex;"><span>---
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">apiVersion</span>: networking.istio.io/v1alpha3
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">kind</span>: VirtualService
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">name</span>: test-vs
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">namespace</span>: default
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">spec</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">hosts</span>:
+</span></span><span style="display:flex;"><span>  - <span style="color:#f1fa8c">&#34;xxxx.xxxx.com&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">gateways</span>:
+</span></span><span style="display:flex;"><span>  - test-gateway
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">http</span>:
+</span></span><span style="display:flex;"><span>  - <span style="color:#ff79c6">match</span>:
+</span></span><span style="display:flex;"><span>    - <span style="color:#ff79c6">uri</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">prefix</span>: /app
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">rewrite</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">uri</span>: /
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">route</span>:
+</span></span><span style="display:flex;"><span>    - <span style="color:#ff79c6">destination</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">port</span>:
+</span></span><span style="display:flex;"><span>          <span style="color:#ff79c6">number</span>: <span style="color:#bd93f9">80</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">host</span>: servcei-a
+</span></span><span style="display:flex;"><span>---
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">apiVersion</span>: security.istio.io/v1
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">kind</span>: AuthorizationPolicy
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">name</span>: test-ingress-policy
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">namespace</span>: istio-ingress
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">spec</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">selector</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">matchLabels</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">app</span>: istio-ingressgateway
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">action</span>: ALLOW
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">rules</span>:
+</span></span><span style="display:flex;"><span>  - <span style="color:#ff79c6">from</span>:
+</span></span><span style="display:flex;"><span>    - <span style="color:#ff79c6">source</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">ipBlocks</span>: [<span style="color:#f1fa8c">&#34;8.8.8.8&#34;</span>]
+</span></span></code></pre></div><p>需注意 gw 和 vs 资源尽量放在实际负载存在的命名空间，而 AuthorizationPolicy 则放在入口控制器部署的命名空间，不然无法进行关联。其 AuthorizationPolicy 的授权管理功能较前两者来说丰富非常多，这里仅使用白名单 IP 来进行配置而已，详细的配置介绍见 istio 官网。</p>
+<p><em><strong>写在最后（题外话）：K8S 社区实际上是在推行 gateway API（不是指 istio 中的 gateway 资源）来取代原来的 ingress API，毕竟 ingress API 支持的流量管理策略十分局限。目前各大入口控制器均在 API 上兼容 gateway API，其中 istio 官网里的相关配置都会一式两份，一份是  istio 原生配置，一份是基于 gateway API 的配置，故 gateway API 是 K8S 入口流量管理的未来</strong></em></p>
+
+
+                
+
+                
+
+                
+
+
+            </div>
+
+            
+            
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+            
+
+            
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                        
+                        
+                    </div>
+                </section>
+                
+
+                
+                
+                <section>
+                    <hr>
+                    <h5>FRIENDS</h5>
+                    <ul class="list-inline">
+                        
+                    </ul>
+                </section>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">                  
+                    
+                    <li>
+                        <a href="mailto:bonvovageonepiece@gmail.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fas fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		           
+                    
+                    
+                    
+                    
+
+		            
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+            
+            
+            
+           
+                   <li>
+                       <a href='' rel="alternate" type="application/rss+xml" title="Maborosi&#39;s Blog" >
+                           <span class="fa-stack fa-lg">
+                               <i class="fas fa-circle fa-stack-2x"></i>
+                               <i class="fas fa-rss fa-stack-1x fa-inverse"></i>
+                           </span>
+                       </a>
+                   </li>
+            
+             </ul>
+		<p class="copyright text-muted">
+                    Copyright &copy; Maborosi&#39;s Blog 2024
+                    
+                    <br>
+                    <a href="https://themes.gohugo.io/hugo-theme-cleanwhite">CleanWhite Hugo Theme</a> by <a href="https://zhaohuabing.com">Huabing</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=zhaohuabing&repo=hugo-theme-cleanwhite&type=star&count=true" >
+                    </iframe>
+                    
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+<script>
+    function loadAsync(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+
+
+
+
+<script>
+    
+    if($('#tag_cloud').length !== 0){
+        loadAsync("/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+
+<script>
+    loadAsync("https://cdn.jsdelivr.net/npm/fastclick@1.0.6/lib/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+
+
+
+<script type="text/javascript">
+    function generateCatalog(selector) {
+
+        
+        
+        
+        
+            _containerSelector = 'div.post-container'
+        
+
+        
+        var P = $(_containerSelector), a, n, t, l, i, c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+
+        
+        $(selector).html('')
+
+        
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#" + $(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="' + i + '" rel="nofollow">' + t + '</a>');
+            l = $('<li class="' + n + '_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;
+    }
+
+    generateCatalog(".catalog-body");
+
+    
+    $(".catalog-toggle").click((function (e) {
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    
+
+
+    loadAsync("\/js\/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+
+
+
+</body>
+</html>
