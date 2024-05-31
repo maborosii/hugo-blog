@@ -15,5 +15,19 @@
       <guid>https://blog.maborosi.xyz/post/01-ingress-diff/</guid>
       <description>背景 因各种 ingress controller 支持的场景各有不同，导致目前在业务项目中使用了两种入口控制器，分别是 k8s 官方维护的 ingress nginx controller (注意：nginx ingress controller 是 nginx 维护的，并非 k8s</description>
     </item>
+    <item>
+      <title>十二怒汉 | 独幕空间里的高超变奏</title>
+      <link>https://blog.maborosi.xyz/post/03-angryman/</link>
+      <pubDate>Thu, 25 Oct 2018 00:00:00 +0000</pubDate>
+      <guid>https://blog.maborosi.xyz/post/03-angryman/</guid>
+      <description>公号旧文，公号早已注销 揭：十二怒汉的知名程度不多赘述，影片所表意的阶层之间的差异与共和，理性与感性的摇摆，真相与惯常思维的辩驳。至于广为外人</description>
+    </item>
+    <item>
+      <title>山药粥</title>
+      <link>https://blog.maborosi.xyz/post/02-shanyaozhou/</link>
+      <pubDate>Mon, 04 Jun 2018 00:00:00 +0000</pubDate>
+      <guid>https://blog.maborosi.xyz/post/02-shanyaozhou/</guid>
+      <description>公号旧文，公号早已注销 幻灭感。 这是芥川的《山药粥》意所指。 这篇小说充斥着一种志怪的氛围，洋洋洒洒间竟然给我一种超现实的味道，颇有点鲁迅先生的</description>
+    </item>
   </channel>
 </rss>

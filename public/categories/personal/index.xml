@@ -1,20 +1,13 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Maborosi&#39;s Blog</title>
-    <link>https://blog.maborosi.xyz/</link>
-    <description>Recent content on Maborosi&#39;s Blog</description>
+    <title>Personal on Maborosi&#39;s Blog</title>
+    <link>https://blog.maborosi.xyz/categories/personal/</link>
+    <description>Recent content in Personal on Maborosi&#39;s Blog</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 26 Dec 2023 13:18:27 +0800</lastBuildDate>
-    <atom:link href="https://blog.maborosi.xyz/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>关于三种控制器授权策略配置梳理（kubernetes ingress controller）</title>
-      <link>https://blog.maborosi.xyz/post/01-ingress-diff/</link>
-      <pubDate>Tue, 26 Dec 2023 13:18:27 +0800</pubDate>
-      <guid>https://blog.maborosi.xyz/post/01-ingress-diff/</guid>
-      <description>背景 因各种 ingress controller 支持的场景各有不同，导致目前在业务项目中使用了两种入口控制器，分别是 k8s 官方维护的 ingress nginx controller (注意：nginx ingress controller 是 nginx 维护的，并非 k8s</description>
-    </item>
+    <lastBuildDate>Thu, 25 Oct 2018 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://blog.maborosi.xyz/categories/personal/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>十二怒汉 | 独幕空间里的高超变奏</title>
       <link>https://blog.maborosi.xyz/post/03-angryman/</link>
