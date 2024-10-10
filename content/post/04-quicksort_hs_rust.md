@@ -42,8 +42,8 @@ fn quicksort_by_hs(a: Vec<u32>) -> Vec<u32> {
     let index = a[0];
     let smaller_collection = a[1..].iter().filter(|s| **s <= index).cloned().collect();
     let bigger_collection = a[1..].iter().filter(|s| **s > index).cloned().collect();
-    let smaller_sorted = quick_sort_by_hs(smaller_collection);
-    let bigger_sorted = quick_sort_by_hs(bigger_collection);
+    let smaller_sorted = quicksort_by_hs(smaller_collection);
+    let bigger_sorted = quicksort_by_hs(bigger_collection);
     let mut result = smaller_sorted;
     result.extend(vec![index]);
     result.extend(bigger_sorted);
