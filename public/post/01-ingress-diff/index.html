@@ -31,15 +31,16 @@
     
     
 
-    <meta name="keyword"  content="personal movie linux">
+    <meta name="keyword" content="personal movie linux">
     <link rel="shortcut icon" href="/img/favicon.ico">
 
-    <title>关于三种控制器授权策略配置梳理（kubernetes ingress controller） | 幻の光 | Maborosi&#39;s Blog</title>
+    <title>关于三种控制器授权策略配置梳理（kubernetes ingress controller） | 幻の光 | Maborosi&#39;s Blog
+    </title>
 
     <link rel="canonical" href="/post/01-ingress-diff/">
 
     
-    
+
     
     <link rel="stylesheet" href="/css/bootstrap.min.css">
 
@@ -71,8 +72,6 @@
     
 
 </head>
-
-
 
 
 
@@ -240,150 +239,150 @@
 </span></span></code></pre></div><h2 id="traefik">traefik</h2>
 <p>当 traefik 作为入口控制器时，推荐使用它自定义的 CR 来完成流量入口规则控制。在其<code>2.10</code>版本中其 CRD 所属的 API 资源组有两种，分别为<code>traefik.containo.us/v1alpha1</code>以及<code>traefik.io/v1alpha1</code>，若查询使用的资源 kind 为短写（不是简写，是指不带 API 前缀的完全名称），则默认指向前者资源组，但目前在其<code>3.0 alpha</code>版本中前者资源组已经被废弃，已完全迁移至后者中，其 CRD 对照表如下：</p>
 <table>
-<thead>
-<tr>
-<th>cr name</th>
-<th>apiversion</th>
-<th>namespaced</th>
-<th>kind</th>
-<th></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>ingressroutes</td>
-<td>traefik.containo.us/v1alpha1</td>
-<td>true</td>
-<td>IngressRoute</td>
-<td></td>
-</tr>
-<tr>
-<td>ingressroutetcps</td>
-<td>traefik.containo.us/v1alpha1</td>
-<td>true</td>
-<td>IngressRouteTCP</td>
-<td></td>
-</tr>
-<tr>
-<td>ingressrouteudps</td>
-<td>traefik.containo.us/v1alpha1</td>
-<td>true</td>
-<td>IngressRouteUDP</td>
-<td></td>
-</tr>
-<tr>
-<td>middlewares</td>
-<td>traefik.containo.us/v1alpha1</td>
-<td>true</td>
-<td>Middleware</td>
-<td></td>
-</tr>
-<tr>
-<td>middlewaretcps</td>
-<td>traefik.containo.us/v1alpha1</td>
-<td>true</td>
-<td>MiddlewareTCP</td>
-<td></td>
-</tr>
-<tr>
-<td>serverstransports</td>
-<td>traefik.containo.us/v1alpha1</td>
-<td>true</td>
-<td>ServersTransport</td>
-<td></td>
-</tr>
-<tr>
-<td>tlsoptions</td>
-<td>traefik.containo.us/v1alpha1</td>
-<td>true</td>
-<td>TLSOption</td>
-<td></td>
-</tr>
-<tr>
-<td>tlsstores</td>
-<td>traefik.containo.us/v1alpha1</td>
-<td>true</td>
-<td>TLSStore</td>
-<td></td>
-</tr>
-<tr>
-<td>traefikservices</td>
-<td>traefik.containo.us/v1alpha1</td>
-<td>true</td>
-<td>TraefikService</td>
-<td></td>
-</tr>
-<tr>
-<td>ingressroutes</td>
-<td>traefik.io/v1alpha1</td>
-<td>true</td>
-<td>IngressRoute</td>
-<td></td>
-</tr>
-<tr>
-<td>ingressroutetcps</td>
-<td>traefik.io/v1alpha1</td>
-<td>true</td>
-<td>IngressRouteTCP</td>
-<td></td>
-</tr>
-<tr>
-<td>ingressrouteudps</td>
-<td>traefik.io/v1alpha1</td>
-<td>true</td>
-<td>IngressRouteUDP</td>
-<td></td>
-</tr>
-<tr>
-<td>middlewares</td>
-<td>traefik.io/v1alpha1</td>
-<td>true</td>
-<td>Middleware</td>
-<td></td>
-</tr>
-<tr>
-<td>middlewaretcps</td>
-<td>traefik.io/v1alpha1</td>
-<td>true</td>
-<td>MiddlewareTCP</td>
-<td></td>
-</tr>
-<tr>
-<td>serverstransports</td>
-<td>traefik.io/v1alpha1</td>
-<td>true</td>
-<td>ServersTransport</td>
-<td></td>
-</tr>
-<tr>
-<td>serverstransporttcps</td>
-<td>traefik.io/v1alpha1</td>
-<td>true</td>
-<td>ServersTransportTCP</td>
-<td></td>
-</tr>
-<tr>
-<td>tlsoptions</td>
-<td>traefik.io/v1alpha1</td>
-<td>true</td>
-<td>TLSOption</td>
-<td></td>
-</tr>
-<tr>
-<td>tlsstores</td>
-<td>traefik.io/v1alpha1</td>
-<td>true</td>
-<td>TLSStore</td>
-<td></td>
-</tr>
-<tr>
-<td>traefikservices</td>
-<td>traefik.io/v1alpha1</td>
-<td>true</td>
-<td>TraefikService</td>
-<td></td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th>cr name</th>
+          <th>apiversion</th>
+          <th>namespaced</th>
+          <th>kind</th>
+          <th></th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>ingressroutes</td>
+          <td>traefik.containo.us/v1alpha1</td>
+          <td>true</td>
+          <td>IngressRoute</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>ingressroutetcps</td>
+          <td>traefik.containo.us/v1alpha1</td>
+          <td>true</td>
+          <td>IngressRouteTCP</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>ingressrouteudps</td>
+          <td>traefik.containo.us/v1alpha1</td>
+          <td>true</td>
+          <td>IngressRouteUDP</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>middlewares</td>
+          <td>traefik.containo.us/v1alpha1</td>
+          <td>true</td>
+          <td>Middleware</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>middlewaretcps</td>
+          <td>traefik.containo.us/v1alpha1</td>
+          <td>true</td>
+          <td>MiddlewareTCP</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>serverstransports</td>
+          <td>traefik.containo.us/v1alpha1</td>
+          <td>true</td>
+          <td>ServersTransport</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>tlsoptions</td>
+          <td>traefik.containo.us/v1alpha1</td>
+          <td>true</td>
+          <td>TLSOption</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>tlsstores</td>
+          <td>traefik.containo.us/v1alpha1</td>
+          <td>true</td>
+          <td>TLSStore</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>traefikservices</td>
+          <td>traefik.containo.us/v1alpha1</td>
+          <td>true</td>
+          <td>TraefikService</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>ingressroutes</td>
+          <td>traefik.io/v1alpha1</td>
+          <td>true</td>
+          <td>IngressRoute</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>ingressroutetcps</td>
+          <td>traefik.io/v1alpha1</td>
+          <td>true</td>
+          <td>IngressRouteTCP</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>ingressrouteudps</td>
+          <td>traefik.io/v1alpha1</td>
+          <td>true</td>
+          <td>IngressRouteUDP</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>middlewares</td>
+          <td>traefik.io/v1alpha1</td>
+          <td>true</td>
+          <td>Middleware</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>middlewaretcps</td>
+          <td>traefik.io/v1alpha1</td>
+          <td>true</td>
+          <td>MiddlewareTCP</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>serverstransports</td>
+          <td>traefik.io/v1alpha1</td>
+          <td>true</td>
+          <td>ServersTransport</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>serverstransporttcps</td>
+          <td>traefik.io/v1alpha1</td>
+          <td>true</td>
+          <td>ServersTransportTCP</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>tlsoptions</td>
+          <td>traefik.io/v1alpha1</td>
+          <td>true</td>
+          <td>TLSOption</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>tlsstores</td>
+          <td>traefik.io/v1alpha1</td>
+          <td>true</td>
+          <td>TLSStore</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>traefikservices</td>
+          <td>traefik.io/v1alpha1</td>
+          <td>true</td>
+          <td>TraefikService</td>
+          <td></td>
+      </tr>
+  </tbody>
 </table>
 <p>仅给出 tcp 服务的配置明细，http 服务基本相同；traefik 中使用 middlewaretcp（tcp 服务）以及 middleware（http 服务）来添加源 IP 授权管理，最后并将 ingressroutetcp 与该 middlewaretcp 进行关联，其中：</p>
 <p>tcp 服务：<code>ingressroutetcp --&gt; middlewaretcp</code></p>
@@ -502,7 +501,6 @@
                 
 
                 
-
 
             </div>
 

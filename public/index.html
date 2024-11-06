@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en-us">
 <head>
-	<meta name="generator" content="Hugo 0.126.1">
+	<meta name="generator" content="Hugo 0.137.1">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -32,15 +32,16 @@
     
     
 
-    <meta name="keyword"  content="personal movie linux">
+    <meta name="keyword" content="personal movie linux">
     <link rel="shortcut icon" href="/img/favicon.ico">
 
-    <title>Maborosi&#39;s Blog | 幻の光 | Maborosi&#39;s Blog</title>
+    <title>Maborosi&#39;s Blog | 幻の光 | Maborosi&#39;s Blog
+    </title>
 
     <link rel="canonical" href="/">
 
     
-    
+
     
     <link rel="stylesheet" href="/css/bootstrap.min.css">
 
@@ -72,8 +73,6 @@
     
 
 </head>
-
-
 
 
 
@@ -182,6 +181,30 @@
 <div data-pagefind-ignore="all">
 
 <div class="post-preview">
+    <a href="https://blog.maborosi.xyz/post/05-sing-box-tproxy/">
+        <h2 class="post-title">
+            sing-box 的全局透明代理
+        </h2>
+	
+        <div class="post-content-preview">
+	
+            <blockquote>
+<p>背景：近期迁移办公区，工作区附近的 wifi 时灵时不灵，找 IT 来看也无果。虽然平时基本不用 wifi，但我有一台 Dell 主机是连接在 wifi 的局域网内，也就导致了那台主机间歇性不能访问公网。尽管不影响远程开发访问，但时不时断开公网十分影响开发体验。在与公网断开期间，该机器可正常访问本地机房的开发主机（不在同一个局域网网段），而开发主机的网络一直是正常的，便产生 Dell 主机通过机房的开发主机来访问公网的代理思路。</p>
+       
+        </div>
+    </a>
+    <p class="post-meta">
+    
+        Posted by Maborosi&#39;s Blog on Tuesday, November 5, 2024
+        
+        
+    
+    </p>
+
+</div>
+<hr>
+
+<div class="post-preview">
     <a href="https://blog.maborosi.xyz/post/04-quicksort_hs_rust/">
         <h2 class="post-title">
             haskell 快速排序的相关 rust 实现
@@ -189,7 +212,16 @@
 	
         <div class="post-content-preview">
 	
-            背景 最近工作空闲，便重新捡起来多次欲入门而不得的技术，比如eBPF，GNU C，cilium，envoy等，这周看起了 haskell 的相关内容。 haskell 快排 quicksort ::
+            <h1 id="背景">背景</h1>
+<p>最近工作空闲，便重新捡起来多次欲入门而不得的技术，比如<code>eBPF</code>，<code>GNU C</code>，<code>cilium</code>，<code>envoy</code>等，这周看起了 haskell 的相关内容。</p>
+<h1 id="haskell-快排">haskell 快排</h1>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-haskell" data-lang="haskell"><span style="display:flex;"><span><span style="color:#50fa7b">quicksort</span> <span style="color:#ff79c6">::</span> (<span style="color:#8be9fd">Ord</span> a) <span style="color:#ff79c6">=&gt;</span> [a] <span style="color:#ff79c6">-&gt;</span> [a]
+</span></span><span style="display:flex;"><span><span style="color:#50fa7b">quicksort</span> <span style="color:#8be9fd">[]</span> <span style="color:#ff79c6">=</span> <span style="color:#8be9fd">[]</span>
+</span></span><span style="display:flex;"><span><span style="color:#50fa7b">quicksort</span> (x<span style="color:#8be9fd">:</span>xs) <span style="color:#ff79c6">=</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">let</span> smallerSorted <span style="color:#ff79c6">=</span> quicksort [a <span style="color:#ff79c6">|</span> a <span style="color:#ff79c6">&lt;-</span> xs, a <span style="color:#ff79c6">&lt;=</span> x]   
+</span></span><span style="display:flex;"><span>      biggerSorted <span style="color:#ff79c6">=</span> quick [a <span style="color:#ff79c6">|</span> a <span style="color:#ff79c6">&lt;-</span> xs, a <span style="color:#ff79c6">&gt;</span> x]
+</span></span><span style="display:flex;"><span>   <span style="color:#ff79c6">in</span> smallerSorted <span style="color:#ff79c6">++</span> [x] <span style="color:#ff79c6">++</span> biggerSorted
+</span></span></code></pre></div><p><em><strong>代码阐述</strong></em>:</p>
        
         </div>
     </a>
@@ -212,7 +244,8 @@
 	
         <div class="post-content-preview">
 	
-            背景 因各种 ingress controller 支持的场景各有不同，导致目前在业务项目中使用了两种入口控制器，分别是 k8s 官方维护的 ingress nginx controller (注意：nginx ingress controller 是 nginx 维护的，并非 k8s
+            <h1 id="背景">背景</h1>
+<p>因各种 ingress controller 支持的场景各有不同，导致目前在业务项目中使用了两种入口控制器，分别是 k8s 官方维护的 ingress nginx controller (注意：nginx ingress controller 是 nginx 维护的，并非 k8s 官方维护，一般说的都是指 k8s 维护的入口控制器)，该控制器承担业务侧 http/https 流量，后因该入口控制器不支持在入口处进行四层代理中的 tls 终结，导致最终采用 traefik 作为第二款入口控制器，其承担业务侧 tls 加密的 tcp 流量。</p>
        
         </div>
     </a>
