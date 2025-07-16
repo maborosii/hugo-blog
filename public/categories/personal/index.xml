@@ -2,24 +2,24 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Personal on Maborosi&#39;s Blog</title>
-    <link>http://localhost:1313/categories/personal/</link>
+    <link>https://blog.maborosi.xyz/categories/personal/</link>
     <description>Recent content in Personal on Maborosi&#39;s Blog</description>
     <generator>Hugo</generator>
     <language>en-us</language>
     <lastBuildDate>Thu, 25 Oct 2018 00:00:00 +0000</lastBuildDate>
-    <atom:link href="http://localhost:1313/categories/personal/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://blog.maborosi.xyz/categories/personal/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>十二怒汉 | 独幕空间里的高超变奏</title>
-      <link>http://localhost:1313/post/03-angryman/</link>
+      <link>https://blog.maborosi.xyz/post/03-angryman/</link>
       <pubDate>Thu, 25 Oct 2018 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/post/03-angryman/</guid>
+      <guid>https://blog.maborosi.xyz/post/03-angryman/</guid>
       <description>&lt;blockquote&gt;&#xA;&lt;p&gt;公号旧文，公号早已注销&lt;/p&gt;&lt;/blockquote&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;揭：十二怒汉的知名程度不多赘述，影片所表意的阶层之间的差异与共和，理性与感性的摇摆，真相与惯常思维的辩驳。至于广为外人道的人性的闪光与生命的尊重，我半点没看出来，至少在表演层面上我没有觉察到任何痕迹。&lt;/p&gt;</description>
     </item>
     <item>
       <title>山药粥</title>
-      <link>http://localhost:1313/post/02-shanyaozhou/</link>
+      <link>https://blog.maborosi.xyz/post/02-shanyaozhou/</link>
       <pubDate>Mon, 04 Jun 2018 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/post/02-shanyaozhou/</guid>
+      <guid>https://blog.maborosi.xyz/post/02-shanyaozhou/</guid>
       <description>&lt;blockquote&gt;&#xA;&lt;p&gt;公号旧文，公号早已注销&lt;/p&gt;&lt;/blockquote&gt;&#xA;&lt;p&gt;幻灭感。&#xA;这是芥川的《山药粥》意所指。&lt;/p&gt;&#xA;&lt;p&gt;这篇小说充斥着一种志怪的氛围，洋洋洒洒间竟然给我一种超现实的味道，颇有点鲁迅先生的味道《阿Q正传》，《狂人日记》，《孔乙己》诸如此类。说起来，芥川与鲁迅也是同时代的人。&lt;/p&gt;</description>
     </item>
   </channel>
