@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en-us">
-<head>
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -10,8 +10,8 @@
     <meta property="og:type" content="article">
 
     
-    <meta property="og:image" content="https://blog.maborosi.xyz//img/maborosi-2.png">
-    <meta property="twitter:image" content="https://blog.maborosi.xyz//img/maborosi-2.png" />
+    <meta property="og:image" content="http://localhost:1313//img/maborosi-2.png">
+    <meta property="twitter:image" content="http://localhost:1313//img/maborosi-2.png" />
     
 
     
@@ -148,37 +148,14 @@
 
 
 
-
-<style type="text/css">
-    header.intro-header {
-        background-image: url('/img/maborosi-2.png')
-    }
-</style>
-
-<header class="intro-header" >
-
+<header class="intro-header" style="background-image: url('/img/maborosi-2.png')">
     <div class="container">
         <div class="row">
-            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                <div class="post-heading">
-                    <div class="tags">
-                        
-                    </div>
-                    <h1>sing-box 的全局透明代理</h1>
-                    <h2 class="subheading"></h2>
-                    <span class="meta">
-                        
-                            Posted by 
-                            
-                                    Maborosi&#39;s Blog
-                             
-                            on 
-                            Tuesday, November 5, 2024
-                            
-                            
-                            
-                            
-                    </span>
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 ">
+                <div class="site-heading">
+                    <h1>Maborosi&#39;s Blog </h1>
+                    
+		    <span class="subheading">no way no way</span>
                 </div>
             </div>
         </div>
@@ -191,17 +168,16 @@
 <article>
     <div class="container">
         <div class="row">
-
             
             <div class="
-                col-lg-8 col-lg-offset-2
-                col-md-10 col-md-offset-1
-                post-container">
-
-                
+            col-lg-8 col-lg-offset-1
+            col-md-8 col-md-offset-1
+            col-sm-12
+            col-xs-12
+            post-container">
+            
                 <blockquote>
-<p>背景：近期迁移办公区，工作区附近的 wifi 时灵时不灵，找 IT 来看也无果。虽然平时基本不用 wifi，但我有一台 Dell 主机是连接在 wifi 的局域网内，也就导致了那台主机间歇性不能访问公网。尽管不影响远程开发访问，但时不时断开公网十分影响开发体验。在与公网断开期间，该机器可正常访问本地机房的开发主机（不在同一个局域网网段），而开发主机的网络一直是正常的，便产生 Dell 主机通过机房的开发主机来访问公网的代理思路。</p>
-</blockquote>
+<p>背景：近期迁移办公区，工作区附近的 wifi 时灵时不灵，找 IT 来看也无果。虽然平时基本不用 wifi，但我有一台 Dell 主机是连接在 wifi 的局域网内，也就导致了那台主机间歇性不能访问公网。尽管不影响远程开发访问，但时不时断开公网十分影响开发体验。在与公网断开期间，该机器可正常访问本地机房的开发主机（不在同一个局域网网段），而开发主机的网络一直是正常的，便产生 Dell 主机通过机房的开发主机来访问公网的代理思路。</p></blockquote>
 <h1 id="方案调研">方案调研</h1>
 <p><em><strong>Dell 主机简称机器 A，机房的开发主机简称机器 B</strong></em></p>
 <h2 id="常规方案">常规方案</h2>
@@ -331,78 +307,95 @@
 <li>本质上和通过 <code>tunnel</code> 设备 + 路由规则劫持请求，大体思路和 <code>wireguard</code> 相差不多。</li>
 </ol>
 
+            
+             
+            
 
-                
+            
+            </div>
+            
+            
 
-                
-                <hr>
-                <ul class="pager">
-                    
-                    <li class="previous">
-                        <a href="/post/04-quicksort_hs_rust/" data-toggle="tooltip" data-placement="top" title="haskell 快速排序的相关 rust 实现">&larr;
-                            Previous Post</a>
-                    </li>
-                    
-                    
+<div class="
+    col-lg-3 col-lg-offset-0
+    col-md-3 col-md-offset-0
+    col-sm-12
+    col-xs-12
+    sidebar-container
+">
+    
+	
+    <section class="visible-md visible-lg">
+	
+        <div class="short-about">
+            
+            
+           
+           <ul class="list-inline">
+               
+               <li>
+                   <a href="mailto:bonvovageonepiece@gmail.com">
+                      <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                      </span>
+                   </a>
+               </li>
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+            
+            
+               
+               
+               
+               
                 </ul>
-                
-
-                
-
             </div>
-
+    </section>
+	
+    
+    
+    
+    
+    <section>
+        <hr class="hidden-sm hidden-xs">
+        <h5>FEATURED TAGS</h5>
+        <div class="tags">
             
             
-            <div class="
-                col-lg-2 col-lg-offset-0
-                visible-lg-block
-                sidebar-container
-                catalog-container">
-                <div class="side-catalog">
-                    <hr class="hidden-sm hidden-xs">
-                    <h5>
-                        <a class="catalog-toggle" href="#">CATALOG</a>
-                    </h5>
-                    <ul class="catalog-body"></ul>
-                </div>
-            </div>
+               
+                    <a href="/tags/personal" title="personal">
+                        personal
+                    </a>
+               
             
+        </div>
+    </section>
+    
 
+    
+    
+    <section>
+        <hr class="hidden-sm hidden-xs">
+        <h5>FRIENDS</h5>
+        <ul class="list-inline">
             
-            <div class="
-                col-lg-8 col-lg-offset-2
-                col-md-10 col-md-offset-1
-                sidebar-container">
+        </ul>
+    </section>
+    
+    
+</div>
 
-                
-                
-                <section>
-                    <hr class="hidden-sm hidden-xs">
-                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
-                    <div class="tags">
-                        
-                        
-                        
-                        <a href="/tags/personal" title="personal">
-                            personal
-                        </a>
-                        
-                        
-                    </div>
-                </section>
-                
-
-                
-                
-                <section>
-                    <hr>
-                    <h5>FRIENDS</h5>
-                    <ul class="list-inline">
-                        
-                    </ul>
-                </section>
-                
-            </div>
         </div>
     </div>
 </article>
@@ -457,7 +450,7 @@
             
              </ul>
 		<p class="copyright text-muted">
-                    Copyright &copy; Maborosi&#39;s Blog 2024
+                    Copyright &copy; Maborosi&#39;s Blog 2025
                     
                     <br>
                     <a href="https://themes.gohugo.io/hugo-theme-cleanwhite">CleanWhite Hugo Theme</a> by <a href="https://zhaohuabing.com">Huabing</a> |

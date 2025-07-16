@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en-us">
-<head>
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -10,8 +10,8 @@
     <meta property="og:type" content="article">
 
     
-    <meta property="og:image" content="https://blog.maborosi.xyz//img/maborosi-2.png">
-    <meta property="twitter:image" content="https://blog.maborosi.xyz//img/maborosi-2.png" />
+    <meta property="og:image" content="http://localhost:1313//img/maborosi-2.png">
+    <meta property="twitter:image" content="http://localhost:1313//img/maborosi-2.png" />
     
 
     
@@ -148,37 +148,14 @@
 
 
 
-
-<style type="text/css">
-    header.intro-header {
-        background-image: url('/img/maborosi-2.png')
-    }
-</style>
-
-<header class="intro-header" >
-
+<header class="intro-header" style="background-image: url('/img/maborosi-2.png')">
     <div class="container">
         <div class="row">
-            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                <div class="post-heading">
-                    <div class="tags">
-                        
-                    </div>
-                    <h1>关于三种控制器授权策略配置梳理（kubernetes ingress controller）</h1>
-                    <h2 class="subheading"></h2>
-                    <span class="meta">
-                        
-                            Posted by 
-                            
-                                    Maborosi&#39;s Blog
-                             
-                            on 
-                            Tuesday, December 26, 2023
-                            
-                            
-                            
-                            
-                    </span>
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 ">
+                <div class="site-heading">
+                    <h1>Maborosi&#39;s Blog </h1>
+                    
+		    <span class="subheading">no way no way</span>
                 </div>
             </div>
         </div>
@@ -191,14 +168,14 @@
 <article>
     <div class="container">
         <div class="row">
-
             
             <div class="
-                col-lg-8 col-lg-offset-2
-                col-md-10 col-md-offset-1
-                post-container">
-
-                
+            col-lg-8 col-lg-offset-1
+            col-md-8 col-md-offset-1
+            col-sm-12
+            col-xs-12
+            post-container">
+            
                 <h1 id="背景">背景</h1>
 <p>因各种 ingress controller 支持的场景各有不同，导致目前在业务项目中使用了两种入口控制器，分别是 k8s 官方维护的 ingress nginx controller (注意：nginx ingress controller 是 nginx 维护的，并非 k8s 官方维护，一般说的都是指 k8s 维护的入口控制器)，该控制器承担业务侧 http/https 流量，后因该入口控制器不支持在入口处进行四层代理中的 tls 终结，导致最终采用 traefik 作为第二款入口控制器，其承担业务侧 tls 加密的 tcp 流量。</p>
 <p>随着业务的发展，金丝雀发布逐渐进入了视野。在 k8s 中使用金丝雀发布必然绕不开服务网格，目前选用的 istio 作为网格组件。当然若只是因为需要金丝雀发布才引入 istio，着实有些大材小用，但因这样的契机引入服务网格，从而反向推动业务侧精细化流量管理也不失为一种所得。在灰度方案测试中，仅使用 istio 的网格功能，对于进出集群的南北流量没有使用 istio 原生的 ingress gateway 以及 egress gateway，仍然由原本的入口控制器承担原来的两种流量。</p>
@@ -212,8 +189,7 @@
 </ol>
 <h1 id="详细配置">详细配置</h1>
 <blockquote>
-<p>三种控制器配置明细均适用于 AWS 与 Azure，严格来说这种配置本身只与控制组件有关，平台中立。</p>
-</blockquote>
+<p>三种控制器配置明细均适用于 AWS 与 Azure，严格来说这种配置本身只与控制组件有关，平台中立。</p></blockquote>
 <h2 id="ingress-nginx-controller">ingress nginx controller</h2>
 <p>K8S 官方的入口控制器使用白名单注解来实现源 IP 授权管理，在 ingress 规则使用注解 <code>nginx.ingress.kubernetes.io/whitelist-source-range: &quot;8.8.8.8&quot;</code> 即可完成白名单配置</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#ff79c6">apiVersion</span>: networking.k8s.io/v1
@@ -418,8 +394,7 @@
 </span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">port</span>: <span style="color:#bd93f9">80</span>
 </span></span></code></pre></div><p>配置中需要注意在 ingressroutetcp 在关联 middlewaretcp 中有个配置项为<code>namespace</code>，它是指 traefik 自身的命名空间，官方说明如下：</p>
 <blockquote>
-<p>As Kubernetes also has its own notion of namespace, one should not confuse the kubernetes namespace of a resource (in the reference to the middleware) with the <a href="https://doc.traefik.io/traefik/providers/overview/#provider-namespace">provider namespace</a>, when the definition of the TCP middleware comes from another provider. In this context, specifying a namespace when referring to the resource does not make any sense, and will be ignored. Additionally, when you want to reference a MiddlewareTCP from the CRD Provider, you have to append the namespace of the resource in the resource-name as Traefik appends the namespace internally automatically.</p>
-</blockquote>
+<p>As Kubernetes also has its own notion of namespace, one should not confuse the kubernetes namespace of a resource (in the reference to the middleware) with the <a href="https://doc.traefik.io/traefik/providers/overview/#provider-namespace">provider namespace</a>, when the definition of the TCP middleware comes from another provider. In this context, specifying a namespace when referring to the resource does not make any sense, and will be ignored. Additionally, when you want to reference a MiddlewareTCP from the CRD Provider, you have to append the namespace of the resource in the resource-name as Traefik appends the namespace internally automatically.</p></blockquote>
 <p>所以建议把这两者放在同一个 k8s 命名空间内部署。</p>
 <h2 id="istio-ingress-gateway">istio ingress gateway</h2>
 <p>istio 所使用的规则最为特殊，前两者主要还是在 ingress api 上做文章，istio 自有一套入口控制资源体系，分别是<code>Gateway</code>和<code>VirtualService</code>，当然该控制器同样支持原生的 ingress 规则模式进行配置，但是其相比 ingress nginx controller 来说没有丰富的注解来进行更为精准的授权流控，故这里采用 istio 原生的资源方式进行授权管理。</p>
@@ -479,83 +454,95 @@
 </span></span></code></pre></div><p>需注意 gw 和 vs 资源尽量放在实际负载存在的命名空间，而 AuthorizationPolicy 则放在入口控制器部署的命名空间，不然无法进行关联。其 AuthorizationPolicy 的授权管理功能较前两者来说丰富非常多，这里仅使用白名单 IP 来进行配置而已，详细的配置介绍见 istio 官网。</p>
 <p><em><strong>写在最后（题外话）：K8S 社区实际上是在推行 gateway API（不是指 istio 中的 gateway 资源）来取代原来的 ingress API，毕竟 ingress API 支持的流量管理策略十分局限。目前各大入口控制器均在 API 上兼容 gateway API，其中 istio 官网里的相关配置都会一式两份，一份是  istio 原生配置，一份是基于 gateway API 的配置，故 gateway API 是 K8S 入口流量管理的未来</strong></em></p>
 
+            
+             
+            
 
-                
+            
+            </div>
+            
+            
 
-                
-                <hr>
-                <ul class="pager">
-                    
-                    <li class="previous">
-                        <a href="/post/03-angryman/" data-toggle="tooltip" data-placement="top" title="十二怒汉 | 独幕空间里的高超变奏">&larr;
-                            Previous Post</a>
-                    </li>
-                    
-                    
-                    <li class="next">
-                        <a href="/post/04-quicksort_hs_rust/" data-toggle="tooltip" data-placement="top" title="haskell 快速排序的相关 rust 实现">Next
-                            Post &rarr;</a>
-                    </li>
-                    
+<div class="
+    col-lg-3 col-lg-offset-0
+    col-md-3 col-md-offset-0
+    col-sm-12
+    col-xs-12
+    sidebar-container
+">
+    
+	
+    <section class="visible-md visible-lg">
+	
+        <div class="short-about">
+            
+            
+           
+           <ul class="list-inline">
+               
+               <li>
+                   <a href="mailto:bonvovageonepiece@gmail.com">
+                      <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                      </span>
+                   </a>
+               </li>
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+            
+            
+               
+               
+               
+               
                 </ul>
-                
-
-                
-
             </div>
-
+    </section>
+	
+    
+    
+    
+    
+    <section>
+        <hr class="hidden-sm hidden-xs">
+        <h5>FEATURED TAGS</h5>
+        <div class="tags">
             
             
-            <div class="
-                col-lg-2 col-lg-offset-0
-                visible-lg-block
-                sidebar-container
-                catalog-container">
-                <div class="side-catalog">
-                    <hr class="hidden-sm hidden-xs">
-                    <h5>
-                        <a class="catalog-toggle" href="#">CATALOG</a>
-                    </h5>
-                    <ul class="catalog-body"></ul>
-                </div>
-            </div>
+               
+                    <a href="/tags/personal" title="personal">
+                        personal
+                    </a>
+               
             
+        </div>
+    </section>
+    
 
+    
+    
+    <section>
+        <hr class="hidden-sm hidden-xs">
+        <h5>FRIENDS</h5>
+        <ul class="list-inline">
             
-            <div class="
-                col-lg-8 col-lg-offset-2
-                col-md-10 col-md-offset-1
-                sidebar-container">
+        </ul>
+    </section>
+    
+    
+</div>
 
-                
-                
-                <section>
-                    <hr class="hidden-sm hidden-xs">
-                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
-                    <div class="tags">
-                        
-                        
-                        
-                        <a href="/tags/personal" title="personal">
-                            personal
-                        </a>
-                        
-                        
-                    </div>
-                </section>
-                
-
-                
-                
-                <section>
-                    <hr>
-                    <h5>FRIENDS</h5>
-                    <ul class="list-inline">
-                        
-                    </ul>
-                </section>
-                
-            </div>
         </div>
     </div>
 </article>
@@ -610,7 +597,7 @@
             
              </ul>
 		<p class="copyright text-muted">
-                    Copyright &copy; Maborosi&#39;s Blog 2024
+                    Copyright &copy; Maborosi&#39;s Blog 2025
                     
                     <br>
                     <a href="https://themes.gohugo.io/hugo-theme-cleanwhite">CleanWhite Hugo Theme</a> by <a href="https://zhaohuabing.com">Huabing</a> |

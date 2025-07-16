@@ -2,46 +2,46 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Posts on Maborosi&#39;s Blog</title>
-    <link>https://blog.maborosi.xyz/post/</link>
+    <link>http://localhost:1313/post/</link>
     <description>Recent content in Posts on Maborosi&#39;s Blog</description>
     <generator>Hugo</generator>
     <language>en-us</language>
     <lastBuildDate>Tue, 05 Nov 2024 17:18:27 +0800</lastBuildDate>
-    <atom:link href="https://blog.maborosi.xyz/post/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/post/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>sing-box 的全局透明代理</title>
-      <link>https://blog.maborosi.xyz/post/05-sing-box-tproxy/</link>
+      <link>http://localhost:1313/post/05-sing-box-tproxy/</link>
       <pubDate>Tue, 05 Nov 2024 17:18:27 +0800</pubDate>
-      <guid>https://blog.maborosi.xyz/post/05-sing-box-tproxy/</guid>
+      <guid>http://localhost:1313/post/05-sing-box-tproxy/</guid>
       <description>&lt;blockquote&gt;&#xA;&lt;p&gt;背景：近期迁移办公区，工作区附近的 wifi 时灵时不灵，找 IT 来看也无果。虽然平时基本不用 wifi，但我有一台 Dell 主机是连接在 wifi 的局域网内，也就导致了那台主机间歇性不能访问公网。尽管不影响远程开发访问，但时不时断开公网十分影响开发体验。在与公网断开期间，该机器可正常访问本地机房的开发主机（不在同一个局域网网段），而开发主机的网络一直是正常的，便产生 Dell 主机通过机房的开发主机来访问公网的代理思路。&lt;/p&gt;</description>
     </item>
     <item>
       <title>haskell 快速排序的相关 rust 实现</title>
-      <link>https://blog.maborosi.xyz/post/04-quicksort_hs_rust/</link>
+      <link>http://localhost:1313/post/04-quicksort_hs_rust/</link>
       <pubDate>Wed, 09 Oct 2024 10:18:27 +0800</pubDate>
-      <guid>https://blog.maborosi.xyz/post/04-quicksort_hs_rust/</guid>
+      <guid>http://localhost:1313/post/04-quicksort_hs_rust/</guid>
       <description>&lt;h1 id=&#34;背景&#34;&gt;背景&lt;/h1&gt;&#xA;&lt;p&gt;最近工作空闲，便重新捡起来多次欲入门而不得的技术，比如&lt;code&gt;eBPF&lt;/code&gt;，&lt;code&gt;GNU C&lt;/code&gt;，&lt;code&gt;cilium&lt;/code&gt;，&lt;code&gt;envoy&lt;/code&gt;等，这周看起了 haskell 的相关内容。&lt;/p&gt;&#xA;&lt;h1 id=&#34;haskell-快排&#34;&gt;haskell 快排&lt;/h1&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-haskell&#34; data-lang=&#34;haskell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#50fa7b&#34;&gt;quicksort&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;::&lt;/span&gt; (&lt;span style=&#34;color:#8be9fd&#34;&gt;Ord&lt;/span&gt; a) &lt;span style=&#34;color:#ff79c6&#34;&gt;=&amp;gt;&lt;/span&gt; [a] &lt;span style=&#34;color:#ff79c6&#34;&gt;-&amp;gt;&lt;/span&gt; [a]&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#50fa7b&#34;&gt;quicksort&lt;/span&gt; &lt;span style=&#34;color:#8be9fd&#34;&gt;[]&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#8be9fd&#34;&gt;[]&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#50fa7b&#34;&gt;quicksort&lt;/span&gt; (x&lt;span style=&#34;color:#8be9fd&#34;&gt;:&lt;/span&gt;xs) &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ff79c6&#34;&gt;let&lt;/span&gt; smallerSorted &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; quicksort [a &lt;span style=&#34;color:#ff79c6&#34;&gt;|&lt;/span&gt; a &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;lt;-&lt;/span&gt; xs, a &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;lt;=&lt;/span&gt; x]   &#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      biggerSorted &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; quick [a &lt;span style=&#34;color:#ff79c6&#34;&gt;|&lt;/span&gt; a &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;lt;-&lt;/span&gt; xs, a &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;gt;&lt;/span&gt; x]&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;   &lt;span style=&#34;color:#ff79c6&#34;&gt;in&lt;/span&gt; smallerSorted &lt;span style=&#34;color:#ff79c6&#34;&gt;++&lt;/span&gt; [x] &lt;span style=&#34;color:#ff79c6&#34;&gt;++&lt;/span&gt; biggerSorted&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;em&gt;&lt;strong&gt;代码阐述&lt;/strong&gt;&lt;/em&gt;:&lt;/p&gt;</description>
     </item>
     <item>
       <title>关于三种控制器授权策略配置梳理（kubernetes ingress controller）</title>
-      <link>https://blog.maborosi.xyz/post/01-ingress-diff/</link>
+      <link>http://localhost:1313/post/01-ingress-diff/</link>
       <pubDate>Tue, 26 Dec 2023 13:18:27 +0800</pubDate>
-      <guid>https://blog.maborosi.xyz/post/01-ingress-diff/</guid>
+      <guid>http://localhost:1313/post/01-ingress-diff/</guid>
       <description>&lt;h1 id=&#34;背景&#34;&gt;背景&lt;/h1&gt;&#xA;&lt;p&gt;因各种 ingress controller 支持的场景各有不同，导致目前在业务项目中使用了两种入口控制器，分别是 k8s 官方维护的 ingress nginx controller (注意：nginx ingress controller 是 nginx 维护的，并非 k8s 官方维护，一般说的都是指 k8s 维护的入口控制器)，该控制器承担业务侧 http/https 流量，后因该入口控制器不支持在入口处进行四层代理中的 tls 终结，导致最终采用 traefik 作为第二款入口控制器，其承担业务侧 tls 加密的 tcp 流量。&lt;/p&gt;</description>
     </item>
     <item>
       <title>十二怒汉 | 独幕空间里的高超变奏</title>
-      <link>https://blog.maborosi.xyz/post/03-angryman/</link>
+      <link>http://localhost:1313/post/03-angryman/</link>
       <pubDate>Thu, 25 Oct 2018 00:00:00 +0000</pubDate>
-      <guid>https://blog.maborosi.xyz/post/03-angryman/</guid>
-      <description>&lt;blockquote&gt;&#xA;&lt;p&gt;公号旧文，公号早已注销&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;揭：十二怒汉的知名程度不多赘述，影片所表意的阶层之间的差异与共和，理性与感性的摇摆，真相与惯常思维的辩驳。至于广为外人道的人性的闪光与生命的尊重，我半点没看出来，至少在表演层面上我没有觉察到任何痕迹。&lt;/p&gt;</description>
+      <guid>http://localhost:1313/post/03-angryman/</guid>
+      <description>&lt;blockquote&gt;&#xA;&lt;p&gt;公号旧文，公号早已注销&lt;/p&gt;&lt;/blockquote&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;揭：十二怒汉的知名程度不多赘述，影片所表意的阶层之间的差异与共和，理性与感性的摇摆，真相与惯常思维的辩驳。至于广为外人道的人性的闪光与生命的尊重，我半点没看出来，至少在表演层面上我没有觉察到任何痕迹。&lt;/p&gt;</description>
     </item>
     <item>
       <title>山药粥</title>
-      <link>https://blog.maborosi.xyz/post/02-shanyaozhou/</link>
+      <link>http://localhost:1313/post/02-shanyaozhou/</link>
       <pubDate>Mon, 04 Jun 2018 00:00:00 +0000</pubDate>
-      <guid>https://blog.maborosi.xyz/post/02-shanyaozhou/</guid>
-      <description>&lt;blockquote&gt;&#xA;&lt;p&gt;公号旧文，公号早已注销&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;p&gt;幻灭感。&#xA;这是芥川的《山药粥》意所指。&lt;/p&gt;&#xA;&lt;p&gt;这篇小说充斥着一种志怪的氛围，洋洋洒洒间竟然给我一种超现实的味道，颇有点鲁迅先生的味道《阿Q正传》，《狂人日记》，《孔乙己》诸如此类。说起来，芥川与鲁迅也是同时代的人。&lt;/p&gt;</description>
+      <guid>http://localhost:1313/post/02-shanyaozhou/</guid>
+      <description>&lt;blockquote&gt;&#xA;&lt;p&gt;公号旧文，公号早已注销&lt;/p&gt;&lt;/blockquote&gt;&#xA;&lt;p&gt;幻灭感。&#xA;这是芥川的《山药粥》意所指。&lt;/p&gt;&#xA;&lt;p&gt;这篇小说充斥着一种志怪的氛围，洋洋洒洒间竟然给我一种超现实的味道，颇有点鲁迅先生的味道《阿Q正传》，《狂人日记》，《孔乙己》诸如此类。说起来，芥川与鲁迅也是同时代的人。&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>
